@@ -32,7 +32,7 @@ type LocalAddress struct {
 	Interface net.Interface
 }
 
-func GetLocalIPv4Address() ([]LocalAddress, error) {
+func GetLocalIPAddress() ([]LocalAddress, error) {
 	var ipAddrs []LocalAddress
 
 	iFaces, err := net.Interfaces()
@@ -55,13 +55,7 @@ func GetLocalIPv4Address() ([]LocalAddress, error) {
 				ip = v.IP
 			}
 
-			if ip.IsLoopback() {
-				continue
-			}
-
-			ip = ip.To4()
-
-			if ip == nil {
+			if ip == nil || ip.IsLoopback() {
 				continue
 			}
 
@@ -73,4 +67,22 @@ func GetLocalIPv4Address() ([]LocalAddress, error) {
 	}
 
 	return ipAddrs, nil
+}
+
+func IsIPv4(ip net.IP) bool {
+	return (len(ip) == net.IPv4len) || (len(ip) == net.IPv6len && isZeros(ip[0:10]) && ip[10] == 0xff && ip[11] == 0xff)
+}
+
+func IsIPv6(ip net.IP) bool {
+	return !IsIPv4(ip)
+}
+
+// Is p all zeros?
+func isZeros(p net.IP) bool {
+	for i := 0; i < len(p); i++ {
+		if p[i] != 0 {
+			return false
+		}
+	}
+	return true
 }

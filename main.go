@@ -34,9 +34,10 @@ import (
 )
 
 var flags struct {
-	Local      bool `short:"l" long:"local" description:"Wether to print the local IP Address instead of the public one"`
-	All        bool `short:"a" long:"all" description:"Print all found local addresses"`
-	Interfaces bool `short:"i" long:"interfaces" description:"Print the local addresses with the corresponding interfaces"`
+	Local      bool   `short:"l" long:"local" description:"Wether to print the local IP Address instead of the public one"`
+	All        bool   `short:"a" long:"all" description:"Print all found local addresses"`
+	Interfaces bool   `short:"i" long:"interfaces" description:"Print the local addresses with the corresponding interfaces"`
+	IPVersion  string `short:"v" long:"ip-version" description:"The version of the IP protocol" choice:"4" choice:"6" choice:"all" default:"4"`
 }
 
 func main() {
@@ -54,10 +55,30 @@ func main() {
 	}
 
 	if flags.Local {
-		ips, err := lib.GetLocalIPv4Address()
+		ips, err := lib.GetLocalIPAddress()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
+		}
+
+		if len(ips) == 0 {
+			fmt.Fprintln(os.Stderr, "No local IP addresses have been found")
+			os.Exit(1)
+		}
+
+		// Filter out ip versions
+		if flags.IPVersion != "all" {
+			for i := 0; i < len(ips); i++ {
+				if (flags.IPVersion == "4" && !lib.IsIPv4(ips[i].IP)) || (flags.IPVersion == "6" && !lib.IsIPv6(ips[i].IP)) {
+					ips = append(ips[:i], ips[i+1:]...)
+					i--
+				}
+			}
+
+			if len(ips) == 0 {
+				fmt.Fprintln(os.Stderr, "No IP addresses with version", flags.IPVersion, "have been found")
+				os.Exit(1)
+			}
 		}
 
 		if flags.All {
