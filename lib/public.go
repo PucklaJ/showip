@@ -38,7 +38,7 @@ type IPAPIResponse struct {
 	Status string
 }
 
-func GetPublicIPv4Address() (net.IP, error) {
+func GetPublicIPAddress() (net.IP, error) {
 	resp, err := http.Get("http://ip-api.com/json/?fields=query,status")
 	if err != nil {
 		return nil, err

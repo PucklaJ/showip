@@ -97,7 +97,7 @@ func main() {
 			}
 		}
 	} else {
-		ip, err := lib.GetPublicIPv4Address()
+		ip, err := lib.GetPublicIPAddress()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
