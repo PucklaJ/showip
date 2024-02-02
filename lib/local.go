@@ -1,8 +1,8 @@
 /***********************************************************************************
  *                         This file is part of showip
- *                    https://github.com/PucklaMotzer09/showip
+ *                    https://github.com/PucklaJ/showip
  ***********************************************************************************
- * Copyright (c) 2022 PucklaMotzer09
+ * Copyright (c) 2022 PucklaJ
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the

@@ -1,4 +1,4 @@
-module github.com/PucklaMotzer09/showip
+module github.com/PucklaJ/showip
 
 go 1.18
 
